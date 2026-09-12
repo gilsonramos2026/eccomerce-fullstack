@@ -6,7 +6,7 @@ import com.ecomerce.entity.Product;
 import com.ecomerce.mapper.ProductMapper;
 import com.ecomerce.repository.CategoryRepository;
 import com.ecomerce.repository.ProductRepository;
-import com.ecomerce.service.impl.ProductServiceImpl; // 💡 Injetar a implementação real
+import com.ecomerce.service.impl.ProductServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +33,10 @@ class ProductServiceTest {
     private ProductMapper productMapper;
 
     @InjectMocks
-    private ProductServiceImpl productService; // 🔴 CORRIGIDO: Alterado de ProductService para a classe de implementação impl
+    private ProductServiceImpl productService;
 
     @Test
-    void shouldCreateProductWhenCategoryIsValid() { // ✅ TRADUZIDO
+    void shouldCreateProductWhenCategoryIsValid() {
         var request = new ProductRequestDTO(
                 "Bluetooth Headphone",
                 "Description",
@@ -57,7 +57,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenCategoryDoesNotExist() { // ✅ TRADUZIDO
+    void shouldThrowExceptionWhenCategoryDoesNotExist() {
         var request = new ProductRequestDTO(
                 "Product X",
                 null,
@@ -71,7 +71,7 @@ class ProductServiceTest {
         when(categoryRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThat(catchException(() -> productService.create(request)))
-                .isInstanceOf(EntityNotFoundException.class); // 💡 Ajustado para a exceção lançada na sua classe impl
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     private Exception catchException(Runnable runnable) {

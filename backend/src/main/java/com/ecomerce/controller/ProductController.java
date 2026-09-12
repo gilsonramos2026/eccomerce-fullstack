@@ -1,5 +1,6 @@
 package com.ecomerce.controller;
 
+import com.ecomerce.dto.product.ProductFilterDTO;
 import com.ecomerce.dto.product.ProductRequestDTO;
 import com.ecomerce.dto.product.ProductResponseDTO;
 import com.ecomerce.service.ProductService;
@@ -13,31 +14,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
-@Tag(name = "Produtos", description = "Endpoints de gerenciamento do catálogo")
+@Tag(name = "Produtos", description = "Endpoints de gerenciamento do catálogo de produtos")
 public class ProductController {
 
     private final ProductService productService;
 
     @GetMapping
-    @Operation(summary = "Lista todos os produtos com paginação")
-    public ResponseEntity<Page<ProductResponseDTO>> findAll(Pageable  pageable) {
+    @Operation(summary = "Lista todos os produtos com paginação geral")
+    public ResponseEntity<Page<ProductResponseDTO>> findAll(Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(pageable));
     }
 
-    @GetMapping("/search") // 💡 ADICIONADO: Endpoint de busca de produtos por termo
-    @Operation(summary = "Busca produtos por nome ou descrição com paginação")
+    @GetMapping("/search") // 🔴 CORRIGIDO: Endpoint unificado de alta performance utilizando Specification
+    @Operation(summary = "Filtra produtos dinamicamente por nome, categoria, preço e estoque")
     public ResponseEntity<Page<ProductResponseDTO>> search(
-            @RequestParam("query") String  query,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(productService.search(query, pageable));
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Boolean onlyInStock,
+            Pageable pageable) {
+
+        ProductFilterDTO filter = new ProductFilterDTO(search, categoryId, minPrice, maxPrice, onlyInStock);
+        return ResponseEntity.ok(productService.search(filter, pageable));
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca produto por ID")
+    @Operation(summary = "Busca um produto específico por ID")
     public ResponseEntity<ProductResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findById(id));
     }

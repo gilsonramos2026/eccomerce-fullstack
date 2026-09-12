@@ -1,6 +1,6 @@
-package com.ecomerce.service.impl; // 🔴 CORRIGIDO: Ajustado para o pacote padrão do seu projeto
+package com.ecomerce.service.impl;
 
-// 🔴 CORRIGIDOS: Todos os imports apontando para com.ecomerce
+import com.ecomerce.dto.product.ProductFilterDTO; // 💡 ADICIONADO
 import com.ecomerce.dto.product.ProductRequestDTO;
 import com.ecomerce.dto.product.ProductResponseDTO;
 import com.ecomerce.entity.Category;
@@ -8,11 +8,13 @@ import com.ecomerce.entity.Product;
 import com.ecomerce.mapper.ProductMapper;
 import com.ecomerce.repository.CategoryRepository;
 import com.ecomerce.repository.ProductRepository;
+import com.ecomerce.repository.spec.ProductSpecifications; // 💡 ADICIONADO
 import com.ecomerce.service.ProductService;
-import jakarta.persistence.EntityNotFoundException; // 💡 DICA: Use EntityNotFoundException se ainda não criou a sua personalizada
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification; // 💡 ADICIONADO
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,18 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable).map(productMapper::toResponseDTO);
     }
 
-    @Override // 💡 ADICIONADO: Implementação do método exigido pela interface ProductService
+    @Override // 💡 ADICIONADO: Nova implementação do catálogo utilizando Specifications dinâmicas
+    public Page<ProductResponseDTO> search(ProductFilterDTO filter, Pageable pageable) {
+        Specification<Product> spec = Specification
+                .where(ProductSpecifications.nameContains(filter.search()))
+                .and(ProductSpecifications.hasCategory(filter.categoryId()))
+                .and(ProductSpecifications.priceBetween(filter.minPrice(), filter.maxPrice()))
+                .and(ProductSpecifications.inStock(filter.onlyInStock()));
+
+        return productRepository.findAll(spec, pageable).map(productMapper::toResponseDTO);
+    }
+
+    @Override // Legado mantido para compatibilidade interna
     public Page<ProductResponseDTO> search(String query, Pageable pageable) {
         return productRepository.search(query, pageable).map(productMapper::toResponseDTO);
     }

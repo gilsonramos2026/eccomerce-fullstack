@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { productService } from '../../services/productService'
-import { ProductCard } from '../../components/product/ProductCard'
 import type { Product } from '../../types/product'
+import { ProductCard } from '../../components/product/ProductCard'
 
 export function Home() {
   const [products, setProducts] = useState<Product[]>([])
@@ -23,7 +23,7 @@ export function Home() {
     loadProducts()
   }, [])
 
-  if (loading) return <p className="text-[var(--text-body)]">Carregando produtos...</p>
+  if (loading) return <p className="text-(--text-body)">Carregando produtos...</p>
   if (error) return <p className="text-red-500">{error}</p>
 
   return (

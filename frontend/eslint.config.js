@@ -18,5 +18,15 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    // 🔴 ADICIONADO: Customização das regras do plugin para liberar exportação de hooks junto a componentes
+    plugins: {
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true }, // 💡 Abre exceção profissional para hooks de contextos (useTheme, useCart)
+      ],
+    },
   },
 ])

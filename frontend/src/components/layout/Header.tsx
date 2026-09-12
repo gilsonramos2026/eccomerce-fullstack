@@ -1,30 +1,31 @@
 import { Link } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
-import { Button } from '../ui/Button'
+import { Button } from '../common/Button'
+
 
 export function Header() {
   const { theme, toggleTheme } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[var(--border-line)] bg-[var(--bg-panel)] backdrop-blur-md transition-colors">
+    <header className="sticky top-0 z-50 w-full border-b border-(--border-line) bg-(--bg-panel) backdrop-blur-md transition-colors">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* LOGO */}
         <div className="flex items-center gap-2">
-          <Link to="/" className="text-xl font-bold tracking-tight text-[var(--text-title)]">
-            E-Commerce<span className="text-[var(--color-primary)]">.</span>
+          <Link to="/" className="text-xl font-bold tracking-tight text-(--text-title)">
+            E-Commerce<span className="text-(--color-primary)">.</span>
           </Link>
         </div>
 
         {/* NAVEGAÇÃO DE ROTAS */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/products" className="text-sm font-medium text-[var(--text-body)] hover:text-[var(--text-title)] transition-colors">
+          <Link to="/products" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
             Produtos
           </Link>
-          <Link to="/categories" className="text-sm font-medium text-[var(--text-body)] hover:text-[var(--text-title)] transition-colors">
+          <Link to="/categories" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
             Categorias
           </Link>
-          <Link to="/orders/me" className="text-sm font-medium text-[var(--text-body)] hover:text-[var(--text-title)] transition-colors">
+          <Link to="/orders/me" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
             Meus Pedidos
           </Link>
         </nav>
@@ -37,9 +38,9 @@ export function Header() {
           </Button>
 
           {/* Carrinho de Compras */}
-          <Link to="/cart" className="relative p-2 text-[var(--text-body)] hover:text-[var(--text-title)] transition-colors">
+          <Link to="/cart" className="relative p-2 text-(--text-body) hover:text-(--text-title) transition-colors">
             <span>🛒</span>
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-bold text-white">
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-(--color-primary) text-[10px] font-bold text-white">
               0
             </span>
           </Link>

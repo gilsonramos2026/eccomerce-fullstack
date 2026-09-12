@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+@theme {
+  /* Cores de marca */
+  --color-brand-50: #fdf2f2;
+  --color-brand-100: #fbdada;
+  --color-brand-400: #e77c7c;
+  --color-brand-500: #db4444;   /* CTA principal */
+  --color-brand-600: #c53030;
+  --color-brand-700: #9b2c2c;
+
+  --color-success-500: #16a34a;
+  --color-warning-500: #f2b90c;
+
+  /* Neutros profundos (grafite) */
+  --color-ink-950: #191921;
+  --color-ink-800: #26262f;
+  --color-ink-600: #5b5c71;
+  --color-ink-400: #a0a1b2;
+  --color-ink-200: #e2e2ea;
+  --color-ink-50:  #f7f7fb;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* Tokens semânticos: Light (padrão) */
+:root {
+  --bg-base: var(--color-ink-50);
+  --bg-surface: #ffffff;
+  --text-title: var(--color-ink-950);
+  --text-body: var(--color-ink-600);
+  --text-placeholder: var(--color-ink-400);
+  --border-line: var(--color-ink-200);
+  --color-primary: var(--color-brand-500);
+}
+
+/* Tokens semânticos: Dark */
+[data-theme="dark"] {
+  --bg-base: var(--color-ink-950);
+  --bg-surface: var(--color-ink-800);
+  --text-title: #ffffff;
+  --text-body: var(--color-ink-400);
+  --text-placeholder: var(--color-ink-600);
+  --border-line: #34343f;
+  --color-primary: var(--color-brand-400);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  transition: background-color .2s ease, color .2s ease;
+}

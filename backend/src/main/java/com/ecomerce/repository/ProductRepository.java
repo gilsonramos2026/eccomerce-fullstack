@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%'))
         """)
     Page<Product> search(String query, Pageable pageable);
+
+    long countByStockQuantityLessThan(Integer quantity);
 }

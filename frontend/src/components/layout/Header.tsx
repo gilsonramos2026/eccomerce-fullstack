@@ -1,54 +1,71 @@
-import { Link } from 'react-router-dom'
-import { useTheme } from '../../context/ThemeContext'
-import { Button } from '../common/Button'
+// src/components/layout/Header.tsx
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
+import { useCart } from '../../context/CartContext'
+import { TopBar } from '../../layout/TopBar'
 
+const navLinks = [
+  { to: '/', label: 'Home' },
+  { to: '/contact', label: 'Contact' },
+  { to: '/about', label: 'About' },
+  { to: '/signup', label: 'Sign Up' },
+]
 
 export function Header() {
-  const { theme, toggleTheme } = useTheme()
+  const { user, logout } = useAuth()
+  const { items } = useCart()
+  const navigate = useNavigate()
+  const [query, setQuery] = useState('')
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    navigate(`/products?q=${encodeURIComponent(query)}`)
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-(--border-line) bg-(--bg-panel) backdrop-blur-md transition-colors">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        
-        {/* LOGO */}
-        <div className="flex items-center gap-2">
-          <Link to="/" className="text-xl font-bold tracking-tight text-(--text-title)">
-            E-Commerce<span className="text-(--color-primary)">.</span>
-          </Link>
-        </div>
+    <header className="border-b border-[var(--border-line)] bg-[var(--bg-surface)]">
+      <TopBar />
+      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-6">
+        <Link to="/" className="text-2xl font-bold text-[var(--text-title)] shrink-0">
+          Exclusive
+        </Link>
 
-        {/* NAVEGAÇÃO DE ROTAS */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/products" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
-            Produtos
-          </Link>
-          <Link to="/categories" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
-            Categorias
-          </Link>
-          <Link to="/orders/me" className="text-sm font-medium text-(--text-body) hover:text-(--text-title) transition-colors">
-            Meus Pedidos
-          </Link>
+        <nav className="hidden md:flex items-center gap-8 text-sm text-[var(--text-title)]">
+          {navLinks.map(link => (
+            <Link key={link.to} to={link.to} className="hover:text-[var(--color-primary)]">
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* ACÇÕES / BOTÕES */}
         <div className="flex items-center gap-4">
-          {/* Alternador de Tema */}
-          <Button variant="ghost" onClick={toggleTheme} aria-label="Alternar tema" className="p-2">
-            {theme === 'light' ? '🌙' : '☀️'}
-          </Button>
+          <form onSubmit={handleSearch} className="hidden sm:flex items-center bg-[var(--bg-base)] rounded-md px-3 py-1.5">
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="What are you looking for?"
+              className="bg-transparent text-sm outline-none w-40"
+            />
+            <button type="submit" aria-label="Buscar">🔍</button>
+          </form>
 
-          {/* Carrinho de Compras */}
-          <Link to="/cart" className="relative p-2 text-(--text-body) hover:text-(--text-title) transition-colors">
-            <span>🛒</span>
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-(--color-primary) text-[10px] font-bold text-white">
-              0
-            </span>
+          <Link to="/wishlist" aria-label="Wishlist" className="text-xl">♡</Link>
+
+          <Link to="/cart" aria-label="Carrinho" className="relative text-xl">
+            🛒
+            {items.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[var(--color-primary)] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                {items.length}
+              </span>
+            )}
           </Link>
 
-          {/* Login */}
-          <Link to="/login">
-            <Button variant="outline" className="px-4 py-1.5 text-xs">Entrar</Button>
-          </Link>
+          {user ? (
+            <button onClick={logout} className="text-sm text-[var(--text-body)]">Sair ({user.name})</button>
+          ) : (
+            <Link to="/login" aria-label="Conta" className="text-xl">👤</Link>
+          )}
         </div>
       </div>
     </header>

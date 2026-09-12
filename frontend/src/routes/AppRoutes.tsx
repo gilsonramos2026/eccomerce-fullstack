@@ -3,6 +3,12 @@ import { PublicLayout } from '../layout/PublicLayout'
 import { Home } from '../pages/public/Home'
 import { AdminLayout } from '../layout/AdminLayout'
 import { ProtectedRoute } from './ProtectedRoute'
+import { Wishlist } from '../pages/public/Wishlist'
+import { SignUp } from '../pages/public/SignUp'
+import { About } from '../pages/public/About'
+import { Contact } from '../pages/public/Contact'
+import { NotFound } from '../pages/public/NotFound'
+import { OrderConfirmation } from '../pages/public/OrderConfirmation'
  
 
 // 💡 Placeholders temporários para evitar erros de compilação até criarmos as telas definitivas
@@ -26,6 +32,15 @@ export function AppRoutes() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
+          // src/routes/AppRoutes.tsx (trecho a adicionar dentro do <PublicLayout />)
+<Route path="/wishlist" element={<Wishlist />} />
+<Route path="/signup" element={<SignUp />} />
+<Route path="/about" element={<About />} />
+<Route path="/contact" element={<Contact />} />
+<Route path="*" element={<NotFound />} />
+<Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+
+
         </Route>
 
         {/* 🔒 Área Administrativa Protegida por JWT (Duplicidade Removida) */}

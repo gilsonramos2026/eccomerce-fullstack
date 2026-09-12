@@ -1,4 +1,4 @@
-package com.ecomerce.secutity;
+package com.ecomerce.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

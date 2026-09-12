@@ -14,4 +14,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     // 💡 Método de segurança para validar se um slug já existe antes de salvar
     boolean existsByName(String slug);
+
+    boolean existsBySlug(String slug);
 }

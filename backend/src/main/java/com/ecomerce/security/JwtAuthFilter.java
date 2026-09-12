@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final com.ecomerce.secutity.JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
     @Override

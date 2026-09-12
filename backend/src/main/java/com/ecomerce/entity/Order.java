@@ -23,17 +23,17 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user_id;
+    private User user; // 🔴 CORRIGIDO: Nome do objeto alterado de user_id para user
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private Status status;
 
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal total_amount;
+    private BigDecimal totalAmount; // 🔴 CORRIGIDO: Nome do atributo alterado para camelCase
 
     @Column(name = "shipping_address", nullable = false, length = 500)
-    private Integer shipping_address;
+    private String shippingAddress; // 🔴 CRÍTICO: Tipo alterado de Integer para String e nome em camelCase
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -46,7 +46,8 @@ public class Order {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now(); // 💡 Inicializa o updatedAt na criação também
     }
 
     @PreUpdate

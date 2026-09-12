@@ -15,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none   # Flyway controla o schema, não o Hibernate
+      ddl-auto: update   # Flyway controla o schema, não o Hibernate
     properties:
       hibernate:
         format_sql: true

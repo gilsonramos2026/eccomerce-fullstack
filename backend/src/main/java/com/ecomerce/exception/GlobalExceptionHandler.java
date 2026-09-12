@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.ecomerce.controller") // 🔴 CORRIGIDO: Monitora apenas os seus controllers e libera o Swagger
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -29,7 +29,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    // 💡 ADICIONADO: Captura genérica para erros internos do servidor (Evita expor stacktrace no frontend)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -45,4 +44,3 @@ public class GlobalExceptionHandler {
         return body;
     }
 }
-

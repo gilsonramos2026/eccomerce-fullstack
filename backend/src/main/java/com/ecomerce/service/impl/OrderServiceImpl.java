@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final OrderMapper orderMapper; // 💡 Injetado para eliminar o acoplamento da entidade nas rotas
+    private final OrderMapper orderMapper;
 
     @Override
     @Transactional
@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = Order.builder()
                 .user(user)
-                .status(Status.PENDING) // 💡 Inicializa o status lúdico padrão do e-commerce
+                .status(Status.PENDING)
                 .shippingAddress(dto.shippingAddress())
                 .totalAmount(BigDecimal.ZERO)
                 .build();
@@ -56,7 +56,6 @@ public class OrderServiceImpl implements OrderService {
                 throw new IllegalStateException("Estoque insuficiente para o produto: " + product.getName());
             }
 
-            // Atualiza a quantidade do estoque localmente (será persistida devido ao estado managed da JPA)
             product.setStockQuantity(product.getStockQuantity() - itemDto.quantity());
 
             BigDecimal unitPrice = product.getDiscountPrice() != null
@@ -68,14 +67,13 @@ public class OrderServiceImpl implements OrderService {
                     .unitPrice(unitPrice)
                     .build();
 
-            order.addItem(item); // Sincroniza bidirecionalmente usando o método utilitário
+            order.addItem(item);
             total = total.add(unitPrice.multiply(BigDecimal.valueOf(itemDto.quantity())));
         }
 
         order.setTotalAmount(total);
         Order savedOrder = orderRepository.save(order);
 
-        // ✅ Usando o Mapper para converter a entidade salva no DTO de resposta limpo
         return orderMapper.toResponseDTO(savedOrder);
     }
 
@@ -89,5 +87,24 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderResponseDTO> findAll(Pageable pageable) {
         return orderRepository.findAll(pageable).map(orderMapper::toResponseDTO);
+    }
+
+    @Override
+    public Page<OrderResponseDTO> findMyOrders(Pageable pageable) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o e-mail: " + email));
+
+        return orderRepository.findByUserId(user.getId(), pageable).map(orderMapper::toResponseDTO);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponseDTO updateStatus(Long id, Status status) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com o ID: " + id));
+
+        order.setStatus(status);
+        return orderMapper.toResponseDTO(order);
     }
 }

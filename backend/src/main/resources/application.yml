@@ -40,3 +40,7 @@ logging:
     com.ecommerce: DEBUG
     org.hibernate.SQL: DEBUG
 
+app:
+  jwt:
+    secret: "troque-esta-chave-por-uma-secreta-de-no-minimo-256-bits"
+    expiration-ms: 86400000  # 24h

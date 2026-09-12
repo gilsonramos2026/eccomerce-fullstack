@@ -15,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # Flyway controla o schema, não o Hibernate
+      ddl-auto: none   # ? CORRIGIDO: Forçado 'none' pois o Flyway controla o schema
     properties:
       hibernate:
         format_sql: true
@@ -37,10 +37,14 @@ springdoc:
 
 logging:
   level:
-    com.ecommerce: DEBUG
+    com.ecomerce: DEBUG # ? CORRIGIDO: Alinhado para o nome real do seu pacote Java
     org.hibernate.SQL: DEBUG
 
+# ? Bloco único de parâmetros customizados da sua aplicação
 app:
   jwt:
-    secret: "troque-esta-chave-por-uma-secreta-de-no-minimo-256-bits"
+    secret: "uma_chave_secreta_padrao_muito_longa_com_mais_de_256_bits_para_o_ecommerce" # ? Lembre-se de usar uma string longa
     expiration-ms: 86400000  # 24h
+  upload:
+    dir: ./uploads/products
+    public-path: /files/products
